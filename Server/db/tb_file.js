@@ -16,6 +16,10 @@ module.exports = class User extends Sequelize.Model{
                 type : Sequelize.STRING(100),
                 allowNull : true,
             },
+            originalFileName : {
+                type : Sequelize.STRING(100),
+                allowNull : true,
+            },
             filePath : {
                 type : Sequelize.STRING(100),
                 allowNull : false,

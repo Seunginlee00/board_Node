@@ -40,13 +40,24 @@
         </tr>
       </thead>
       <tbody>
-        <% data.forEach((el,index) => {%>
+        <% 
+        data.forEach((el,index) => {%>
         <tr>
           <th scope="row"><%= index + 1%></th>
           <td><%= el.bbsWriter %></td>
           <td><a href="/main/details/<%= el.bbsNo %>"><%= el.bbsTitle %></a></td>
-          <td><%= el.bbsCreateDate %></td>
-          <td><%= el.bbsModifyDate %></td>
+          <td>
+            <% 
+            var createDate = new Date(el.bbsCreateDate).toLocaleDateString().replace(/\./g, '').replace(/\s/g, '-');
+            %>
+            <%=createDate%>
+          </td>
+          <td>
+            <% 
+            var ModifyDate = new Date(el.bbsModifyDate).toLocaleDateString().replace(/\./g, '').replace(/\s/g, '-');
+            %>
+            <%=ModifyDate%>
+          </td>
           <td>
             <button class="btn btn-warning" onclick="location.href ='/main/modify/<%= el.bbsNo %>'">수정</button>
           </td>

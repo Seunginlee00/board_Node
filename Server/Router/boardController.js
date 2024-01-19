@@ -1,13 +1,21 @@
 const express = require("express");
 const ejs = require('ejs');
 const app = express();
-
+// 파일 읽기
+const fs = require('fs');
 // 파일 업로드 
 // 다중 업로드 https://wise-computing-life.tistory.com/168
 const multer = require('multer'); // upload 모듈
 const storage = multer.diskStorage({
     destination: (req, file, callback) => {
-        callback(null, "public/uploads/");
+      var today = new Date();
+
+      var dir = "public/uploads/" + today
+      if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir, { recursive: true });
+      }
+
+        callback(null, dir);
     },
     filename: (req, file, callback) => {
         callback(null, Date.now() + '_' +  file.originalname );
@@ -18,8 +26,7 @@ const storage = multer.diskStorage({
   
 const upload = multer({ storage: storage}).array("myfile");
 
-// 파일 읽기
-const fs = require('fs');
+
 
 
 // //데이터베이스 
@@ -53,7 +60,7 @@ exports.mainView = async function(req, res, next) {
     var bbsData = await models.Bbs.findAll({
         offset: offset,
         limit: pageSize,
-        order: [["bbsCreateDate", "ASC"]],
+        order: [['bbsCreateDate', 'DESC']],
         raw:true
     });
     var cnt = await models.Bbs.findAll({
@@ -119,9 +126,11 @@ exports.createView = function (req, res) {
 
 exports.createAction = async function (req, res) {
   upload(req, res, (err) => {
-        console.log("req.files.length",req.files.length);
+    console.log("path",path);
+
         if(req.files.length != 0){
-          var path = req.files[0].path.split('\\', 2);
+          var path = req.files[0].path.split('\\', 3);
+          console.log("path",path);
           models.Bbs.create({
                   bbsWriter : req.body.writer,
                   bbsTitle : req.body.title,
@@ -130,10 +139,12 @@ exports.createAction = async function (req, res) {
                   bbsModifyDate : sequelize.fn('NOW'),
               }).then(function(result){
                 for(var i=0; i<req.files.length; i++){
+                  console.log("req.files[i].originalname", req.files[i].originalname);
                   models.tb_file.create({
                     bbsNo: result.bbsNo,
                     fileName: req.files[i].filename,
-                    filePath: path[1],
+                    originalFileName: req.files[i].originalname,
+                    filePath: path[2],
                   }).catch(function(err){
                     console.log(err)
                    });   

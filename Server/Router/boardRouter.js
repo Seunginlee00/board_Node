@@ -45,9 +45,7 @@ router.get('/delete/:bbsNo', function(req,res){
 });
 
 
-
-
-
 module.exports = router;
 
 
+ 
