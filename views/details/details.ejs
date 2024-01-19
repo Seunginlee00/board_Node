@@ -1,0 +1,79 @@
+<html>
+    <head></head>
+    <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+    <script src="https://www.google.com/recaptcha/api.js" async defer>
+</script>
+<script language="javascript">
+      function sub(){
+          insertFrm.submit();
+      }
+
+      //숫자만 
+      $(document).on("keyup", "input:text[numOnly]", function() {$(this).val( $(this).val().replace(/[^0-9]/gi,"") );});
+      //영문 + 숫자 
+      $(document).on("keyup", "input:text[engOnly]", function() {$(this).val( $(this).val().replace(/[^a-z0-9]/gi,"") );});
+
+      //영문 + 숫자 + 한글 
+      $(document).on("keyup", "input:text[textOnly]", function() {$(this).val( $(this).val().replace(/[^a-zA-Z0-9ㄱ-ㅎ가-힣]/gi,"") );});
+
+
+  $(document).ready(function() {
+     $('#summernote').summernote({
+             height: 300,                 // set editor height
+             minHeight: null,             // set minimum height of editor
+             maxHeight: null,             // set maximum height of editor
+             focus: true                  // set focus to editable area after initializing summernote
+     });
+  });
+
+</script>
+
+<!-- include libraries(jQuery, bootstrap) -->
+<link href="http://netdna.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.css" rel="stylesheet">
+<script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.js"></script> 
+<script src="http://netdna.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.js"></script> 
+
+<!-- include summernote css/js-->
+<link href="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.8/summernote.css" rel="stylesheet">
+<script src="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.8/summernote.js"></script>
+
+
+    <body>
+      <h2 class="text-center">글작성 상세</h2>
+
+      <div class="d-flex justify-content-center">
+        글쓴이 : <input name="writer" class="w-50 form-control text-center" type="text" maxlength="10" readonly value="<%=data.bbsWriter%>"/>
+      </div>
+      
+      <div class="d-flex justify-content-center">
+        제목 : <input name="title" class="w-50 form-control text-center" type="text" maxlength="30" readonly value="<%=data.bbsTitle%>"/>
+      </div>
+      
+      내용 : 
+     
+      <textarea name="content" id="summernote" readonly><%=data.bbsContent%></textarea>
+      <!-- <textarea readonly name="content" class="mt-4 text-center form-control" rows="8" textOnly><%=data.bbsContent%></textarea> -->
+     
+      <%
+
+      var fileList = fileList; 
+
+      if(fileList != null) { 
+          for(i=0; i<fileList.length; i++){
+            %>
+            
+            <img src="<%=fileList[i]%>" width="200px"> 
+         <%
+          } 
+      }
+      %>
+
+      
+
+
+      <div class="text-center mt-3">
+        <button class="btn btn-warning" onclick="location.href ='/main/'">목록</button>
+        <button class="btn btn-warning" onclick="location.href ='/main/modify/<%= data.bbsNo %>'">수정</button>
+      </div>
+ </body>
+</html>

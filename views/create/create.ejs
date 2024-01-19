@@ -1,0 +1,51 @@
+<html>
+    <head></head>
+    <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+    <script src="https://www.google.com/recaptcha/api.js" async defer>
+</script>
+<script language="javascript">
+      function sub(){
+          insertFrm.submit();
+      }
+
+
+      //숫자만 
+      $(document).on("keyup", "input:text[numOnly]", function() {$(this).val( $(this).val().replace(/[^0-9]/gi,"") );});
+      //영문 + 숫자 
+      $(document).on("keyup", "input:text[engOnly]", function() {$(this).val( $(this).val().replace(/[^a-z0-9]/gi,"") );});
+
+      //영문 + 숫자 + 한글 
+      $(document).on("keyup", "input:text[textOnly]", function() {$(this).val( $(this).val().replace(/[^a-zA-Z0-9ㄱ-ㅎ가-힣]/gi,"") );});
+
+
+      $
+
+
+</script>
+    <body>
+    <form
+      id="insertFrm"
+      class="container d-flex flex-column justify-content-center"
+      action="/main/pre-create"
+      method="post">
+      <h2 class="text-center">글작성</h2>
+
+      <div class="d-flex justify-content-center">
+        글쓴이 : <input name="writer" class="w-50 form-control text-center" type="text" maxlength="10" textOnly/>
+      </div>
+      
+      <div class="d-flex justify-content-center">
+        제목 : <input name="title" class="w-50 form-control text-center" type="text" maxlength="30" textOnly/>
+      </div>
+      
+      내용 : 
+      <textarea name="content" class="mt-4 text-center form-control" rows="8" textOnly></textarea>
+     
+      <div class="g-recaptcha" data-sitekey="6Lf9Q04pAAAAAJimCeZvyYzRla7HnpWlGFWvgVan"></div>
+
+      <div class="text-center mt-3">
+        <button type="submit" class="btn btn-primary">글쓰기</button>
+      </div>
+    </form>
+ </body>
+</html>

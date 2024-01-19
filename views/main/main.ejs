@@ -1,0 +1,81 @@
+<html>
+<head></head>
+<body>
+  <script>
+    function delBtn(e){
+      if (confirm("정말 삭제하시겠습니까??") == true){    //확인
+        location.href ='/main/delete/'+e;
+        }else{   //취소
+        return false;
+      }
+    }
+  </script>
+
+    <div class="btnBox">
+      
+      <button
+        onclick="location.href = '/main/pre-create'"
+        class="w-50 mb-5 mt-2 btn btn-success">
+        이전 글쓰기
+      </button>
+      
+      <button
+        onclick="location.href = '/main/create'"
+        class="w-50 mb-5 mt-2 btn btn-success">
+        글쓰기
+      </button>
+
+      
+    </div>
+
+    <table class="table TableBox">
+      <thead>
+        <tr>
+          <th scope="col">번호</th>
+          <th scope="col">글쓴이</th>
+          <th scope="col">제목</th>
+          <th scope="col">작성일</th>
+          <th scope="col">수정일</th>
+          <th scope="col">수정/삭제</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% data.forEach((el,index) => {%>
+        <tr>
+          <th scope="row"><%= index + 1%></th>
+          <td><%= el.bbsWriter %></td>
+          <td><a href="/main/details/<%= el.bbsNo %>"><%= el.bbsTitle %></a></td>
+          <td><%= el.bbsCreateDate %></td>
+          <td><%= el.bbsModifyDate %></td>
+          <td>
+            <button class="btn btn-warning" onclick="location.href ='/main/modify/<%= el.bbsNo %>'">수정</button>
+          </td>
+          <td>
+            <button class="btn btn-warning" onclick="delBtn('<%= el.bbsNo %>')">삭제</button>
+          </td>
+        </tr>
+        <% }) %>
+      </tbody>
+     
+    </table>
+
+    <% 
+    var totalPage= Math.ceil(totalCnt/pageSize); 
+    %>
+
+
+
+    <a href="/main?page=1&pageSize=<%=pageSize%>"><</a>
+
+    <%
+    for(var i = 0; i < totalPage; i++){
+    %>
+      <a href="/main?page=<%= i + 1 %>&pageSize=<%=pageSize%>"><%= i + 1 %></a>
+     <%
+      }
+      %>
+
+      <a href="/main?page=<%=totalPage%>&pageSize=<%=pageSize%>">></a>
+
+  </body>
+</html>

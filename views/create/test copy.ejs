@@ -1,0 +1,173 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="ko">
+    <head></head>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<!-- include libraries(jQuery, bootstrap) -->
+<link href="http://netdna.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.css" rel="stylesheet">
+<script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.js"></script> 
+<script src="http://netdna.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.js"></script> 
+
+<!-- include summernote css/js-->
+<link href="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.8/summernote.css" rel="stylesheet">
+<script src="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.8/summernote.js"></script>
+
+
+
+<body>
+    <form
+      id="insertFrm"
+      class="container d-flex flex-column justify-content-center"
+      action="/main/create"
+      enctype="multipart/form-data" 
+      method="post">
+      <h2 class="text-center">글작성</h2>
+
+      <div class="d-flex justify-content-center">
+        글쓴이 : <input name="writer" id="writer"  class="w-50 form-control text-center" type="text" maxlength="10" textOnly/>
+      </div>
+      
+      <div class="d-flex justify-content-center">
+        제목 : <input name="title" id="title" class="w-50 form-control text-center" type="text" maxlength="30" textOnly/>
+      </div>
+
+      내용 : 
+      <textarea name="content" id="summernote" value=""></textarea>
+      <!-- <textarea name="content" class="mt-4 text-center form-control" rows="8" textOnly></textarea> -->
+     
+      <input id="myfile" type="file" name="myfile" accept="image/*" multiple />
+
+      <div class="text-center mt-3">
+        <button type="submit" id="submit" class="btn btn-primary">글쓰기</button>
+      </div>
+    </form>
+
+ 
+
+    <script language="javascript">
+        //숫자만 
+        $(document).on("keyup", "input:text[numOnly]", function() {$(this).val( $(this).val().replace(/[^0-9]/gi,"") );});
+        //영문 + 숫자 
+        $(document).on("keyup", "input:text[engOnly]", function() {$(this).val( $(this).val().replace(/[^a-z0-9]/gi,"") );});
+  
+        //영문 + 숫자 + 한글 
+        $(document).on("keyup", "input:text[textOnly]", function() {$(this).val( $(this).val().replace(/[^a-zA-Z0-9ㄱ-ㅎ가-힣]/gi,"") );});
+  
+
+        // 유효성 
+        var writer = document.getElementById("writer");
+        var title = document.getElementById("title");
+        var summernote = document.getElementById("summernote");
+
+
+       
+
+
+        $(document).ready(function() {
+          $('#summernote').summernote({
+                  height: 300,                 // set editor height
+                  minHeight: null,             // set minimum height of editor
+                  maxHeight: null,             // set maximum height of editor
+                  focus: true                  // set focus to editable area after initializing summernote
+          });
+        });
+  
+// 다중 업로드 
+const formData = new FormData(); //서버로 보낼 이미지 form
+
+if (document.getElementById("myfile")) {
+  let uploadNum = 0; //올린 사진 셀 변수
+  let index = 0; //img 에 붙일 index
+
+  document.getElementById("myfile").addEventListener("change", function (e) {
+  
+    const length = this.files.length;
+    const max = 4; //사진 최대 4장까지
+    switch (uploadNum) {
+      case 0:
+        if (length > max - uploadNum) {
+          alert("사진은 최대 4장까지만 가능합니다.");
+          return;
+        }
+        uploadNum += length;
+        break;
+      case 1:
+        if (length > max - uploadNum) {
+          alert("사진은 최대 4장까지만 가능합니다.");
+          return;
+        }
+        uploadNum += length;
+        break;
+      case 2:
+        if (length > max - uploadNum) {
+          alert("사진은 최대 4장까지만 가능합니다.");
+          return;
+        }
+        uploadNum += length;
+        break;
+      case 3:
+        if (length > max - uploadNum) {
+          alert("사진은 최대 4장까지만 가능합니다.");
+          return;
+        }
+        uploadNum += length;
+        break;
+      default:
+        alert("사진은 최대 4장까지만 가능합니다.");
+        return;
+    }
+
+    console.log("현재 올린 사진 : ", this.files);
+    for (let i = 0; i < length; i++) {
+      formData.append("files", this.files[i]);
+      index++;
+    }
+
+  });
+
+
+
+};
+
+const $form = document.getElementById("insertFrm");
+const $button = document.getElementById("submit");
+
+ $button.addEventListener("click", (event) => {
+      console.log("writer.value.length == 0",writer.value.length);
+          if(writer.value.length == 0){
+            alert("작성자를 입력해주세요.");
+            return false;
+          }
+
+          if(title.value.length == 0){
+            alert("제목을 입력해주세요.");
+            return false;
+          }
+
+          if(summernote.value.length == 0){
+            alert("내용을 입력해주세요.");
+            return false;
+          }
+
+        $form.addEventListener("submit", (event) => {
+        $.ajax({
+                url : "/main/create",
+                type : "POST",
+                data : formData,
+                cache : false,
+                contentType : false,
+                processData : false,
+                error :  function(code, status, status){
+                  alert("데이터 전송 실패");
+                },
+                success :  function(code, status, status){
+                },
+            });
+          });
+      
+    });
+  </script>
+
+
+ </body>
+
+</html>
