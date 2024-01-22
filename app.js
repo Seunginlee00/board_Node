@@ -17,6 +17,7 @@ app.listen(port, function() {
 
 // board 라우터 
 const boardRouter = require('./Server/Router/boardRouter');
+const loginRouter = require('./Server/Router/loginRouter');
 // app.use(express.json());
 // 아래 설정을 하지 않으면 req.body를 받을 수 없음 
 // .urlencoded()은 x-www-form-urlencoded형태의 데이터를
@@ -25,6 +26,7 @@ const boardRouter = require('./Server/Router/boardRouter');
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static('public')); //css
 app.use("/main",boardRouter);
+app.use("/",loginRouter);
 
 // db 설정들 
 

@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="ko"> 
+<head>
+<meta charset="UTF-8">
+<title>회원가입</title> 
+</head>
+<body>
+
+   <div id="wrap" class="wrapper">
+      <form method ="post"
+      id="insertFrm"
+      action="/join">
+
+
+        <div id="container">
+            <div class="row_group">
+               <div class="userInput">
+        <!-- 아이디 입력 -->
+                  <h3 class="list">아이디<span id="idError"></span></h3>
+                  <span class="box int_id" ><input type="text" id="username" name="username" class="int check"
+                    minlength="4" maxlength="10">
+                    <button class="btn btn-primary" type="button" id="userIdChk"
+                    onclick="chkId()">중복체크</button>
+                  </span>
+                    <span id="spUserId" style="display:none;"></span>
+                  </div>
+               <div class="userInput">
+        <!-- 비밀번호 입력 -->
+                  <h3 class="list">비밀번호<span id="pwError"></span></h3>
+                  <span class="box int_id"><input type="password" name="password" class="int check"
+                     maxlength="20"></span>
+               </div>
+        <!-- 비밀번호 재확인 입력 -->
+               <div class="userInput">
+                  <h3 class="list">비밀번호 재확인<span id="pwCheckError"></span></h3>
+                  <span class="box int_id"><input type="password" id="pwCheck" class="int check" 
+                     maxlength="20"></span>
+               </div>
+            </div>
+               <div class="row_group">
+        <!-- 이메일 입력 -->
+               <div class="userInput">
+                이메일 : <input type="text" name="str_email01" id="str_email01" style="width:100px"> @
+                <input type="text" name="str_email02" id="str_email02" style="width:100px;" disabled value="naver.com">
+                <select style="width:100px;margin-right:10px" name="selectEmail" id="selectEmail">
+                     <option value="1">직접입력</option>
+                     <option value="naver.com" selected>naver.com</option>
+                     <option value="hanmail.net">hanmail.net</option>
+                     <option value="nate.com">nate.com</option>
+                     <option value="yahoo.co.kr">yahoo.co.kr</option>
+                     <option value="gmail.com">gmail.com</option>
+                </select>
+               </div>
+        <!-- 전화번호 입력 -->
+               <div class="userInput">
+                  <h3 class="list">전화번호<span id="phoneNumError"></span></h3>
+                  <span class="box int_id"><input type="text" name="phone1" class="int check"
+                     maxlength="11"></span>
+                     -
+                     <span class="box int_id"><input type="text" name="phone2" class="int check"
+                        maxlength="11"></span>
+                    - 
+                    <span class="box int_id"><input type="text" name="phone3" class="int check"
+                        maxlength="11"></span>
+               </div>
+            </div>
+            <button type="reset">취소</button>
+            <button id="submit" onclick="submitCheck()">가입</button>
+      </form>
+
+        
+      </div>
+    
+<script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script type="text/javascript">
+      //이메일 입력방식 선택
+      $('#selectEmail').change(function(){
+         $("#selectEmail option:selected").each(function () {
+              
+              if($(this).val()== '1'){ //직접입력일 경우
+                   $("#str_email02").val('');                        //값 초기화
+                   $("#str_email02").attr("disabled",false); //활성화
+              }else{ //직접입력이 아닐경우
+                   $("#str_email02").val($(this).text());      //선택값 입력
+                   $("#str_email02").attr("disabled",true); //비활성화
+              }
+         });
+      });
+
+      var commonUtil = 
+         {
+            isEmpty : function ( str )
+            {
+               return (str == '' || str == undefined || str == null || str == 'null' );
+            },
+
+            isNotEmpty : function(str)
+            {
+               return !this.isEmpty(str);
+            },
+         };
+
+
+
+function chkpw(){
+	var username = $("#username").val();
+	console.log(username);
+	
+	// 빈 값 체크
+	if(commonUtil.isEmpty(username)){
+		var str = "아이디가 입력되지 않았습니다.";
+		formSetting(str,"#spUserId",false);
+		$("#username").focus();
+	    return;
+	}
+    var regExp = /^[a-zA-Z][a-zA-Z0-9-_]{3,10}$/;
+    if(!regExp.test(username)){ // 정규식 값에 맞는지 확인함.
+    	var str = "4~10자 영문, 숫자를 사용하세요. 첫글자는 숫자를 쓸 수 없습니다.";
+    	formSetting(str,"#spUserId",false);
+    	$("#username").focus();
+    	return;
+    }
+	
+
+    function formSetting(str,spanId,flag){
+         if(flag){
+            $(spanId).attr('class', 'form-text text-success');
+         } else { 
+            $(spanId).attr('class', 'form-text text-danger');
+         }
+         $(spanId).text(str);
+         $(spanId).show();
+      }
+}
+
+var chkIdData = 0; // 아이디 체크 눌렀는지 확인
+var wrongId = false; // 틀린 아이디 체크 
+function chkId(){
+   idFlag = false;
+   runIdCheckFlag = true;
+	var username = $("#username").val();
+	// 빈 값 체크
+	if(commonUtil.isEmpty(username)){
+		var str = "아이디가 입력되지 않았습니다.";
+		formSetting(str,"#spUserId",false);
+		$("#username").focus();
+      wrongId = true;
+	    return;
+	}
+	
+	// // 공백 체크
+	// if(hasBlank(username)) {
+	// 	var str = "아이디에 빈 칸은 입력하실 수 없습니다.";
+	// 	formSetting(str,"#spUserId",false);
+	// 	$("#username").focus();
+	// 	return false;
+	// }
+	
+    var regExp = /^[a-zA-Z][a-zA-Z0-9-_]{3,10}$/;
+    if(!regExp.test(username)){ // 정규식 값에 맞는지 확인함.
+    	var str = "4~10자 영문, 숫자를 사용하세요. 첫글자는 숫자를 쓸 수 없습니다.";
+    	formSetting(str,"#spUserId",false);
+       $("#username").focus();
+       wrongId = true;
+    	return;
+    }
+	
+
+    function formSetting(str,spanId,flag){
+         if(flag){
+            $(spanId).attr('class', 'form-text text-success');
+         } else { 
+            $(spanId).attr('class', 'form-text text-danger');
+         }
+         $(spanId).text(str);
+         $(spanId).show();
+      }
+
+
+    // 아이디 체크
+	$.ajax({
+		url : "/idCheck"
+		, type : "post"
+		, data : {"username" : username}
+		, dataType : "json"
+		, async : false
+		, success : function(data){
+			if(data > 0){
+				idFlag = false;
+				var str = "중복된 아이디가 존재합니다.";
+		    	formSetting(str,"#spUserId",false);
+		    	$("#username").focus();
+			}else{
+				idFlag = true;
+				var str = "사용가능한 아이디입니다.";
+		    	formSetting(str,"#spUserId",true);
+             chkIdData++;
+			}
+		}
+		, error : function(xhr){
+			console.log(xhr);
+			alert("ID 중복 검사 중 오류가 발생했습니다. 관리자에게 문의하세요.");
+		}
+	});
+
+   
+}
+   function submitCheck(){
+      console.log("chkIdData :: ",chkIdData);
+      if(chkIdData != 0){
+         //아이디체크 후에만 가입 전송 
+         var insertFrm = document.getElementById("insertFrm");
+         insertFrm.method = "post"
+         insertFrm.action = url;
+         insertFrm.submit();
+
+      }else{
+         if(wrongId){
+            return alert("올바른 아이디 값을 입력해주세요.");
+         }
+         return alert("중복체크를 진행해주세요.");
+      }
+
+   }
+
+
+      </script>
+
+    </body>
+
+
+</html>

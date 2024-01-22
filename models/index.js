@@ -52,6 +52,7 @@ const config = require('../config/config')[env];
 // 테이블 추가 
 const Bbs = require('../Server/db/bbs');
 const tb_file = require('../Server/db/tb_file');
+const tb_join = require('../Server/db/tb_join');
 
 const db = {};
 
@@ -63,8 +64,12 @@ db.Bbs = Bbs; // db 객체에 모델에  담기
 Bbs.init(sequelize); 
 Bbs.associate(db); // 다른 테이블과의 관계를 연결함
 
-db.tb_file = tb_file; // db 객체에 모델에  담기 
+db.tb_file = tb_file;
 tb_file.init(sequelize);
 tb_file.associate(db);
+
+db.tb_join = tb_join;
+tb_join.init(sequelize);
+tb_join.associate(db);
 
 module.exports = db;
