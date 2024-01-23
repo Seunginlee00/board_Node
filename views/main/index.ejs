@@ -1,15 +1,43 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>메인페이지</title>
 </head>
 <body>
-    <input type="text" name="username" placeholder="아이디"><br>
-    <input type="password" name="password" placeholder="비밀번호"><br>
-    <button>로그인</button>
-
+    <form 
+        method="post"
+        id="insertFrm"
+        action="/login">
+        <input type="text" id="username" name="username" placeholder="아이디"><br>
+        <input type="password" id="password" name="password" placeholder="비밀번호"><br>
+        <button type="submit" onclick="valChk()">로그인</button>    
+    </form>
+   
     <button onclick="location.href='/join'">회원가입</button>
+
+ 
+<script type="text/javascript">
+
+    function valChk() {
+        console.log("들어옴");
+
+        var username = $("#username").val();
+        var password = $("#password").val();
+        if(username == "" || password == ""){
+            alert("비어있는 값이 있습니다.");
+            return false;
+        }else{
+               // 아이디체크 후에만 가입 전송 
+               var insertFrm = document.getElementById("insertFrm");
+               insertFrm.submit();
+         
+        }
+
+    }
+
+</script>
 </body>
 </html>

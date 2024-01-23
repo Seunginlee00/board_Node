@@ -1,28 +1,14 @@
 <html>
 <head></head>
+<script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
 <body>
-  <script>
-    function delBtn(e){
-      if (confirm("정말 삭제하시겠습니까??") == true){    //확인
-        location.href ='/main/delete/'+e;
-        }else{   //취소
-        return false;
-      }
-    }
-  </script>
 
     <div class="btnBox">
       
       <button
-        onclick="location.href = '/main/pre-create'"
+        onclick="location.href = '/main'"
         class="w-50 mb-5 mt-2 btn btn-success">
-        이전 글쓰기
-      </button>
-      
-      <button
-        onclick="location.href = '/main/create'"
-        class="w-50 mb-5 mt-2 btn btn-success">
-        글쓰기
+        게시판
       </button>
 
       <button
@@ -37,11 +23,7 @@
 
 
     <%
-
     var username = username; 
-
-    console.log("username",username);
-
     if(username != null) { 
           %>
           
@@ -55,11 +37,8 @@
       <thead>
         <tr>
           <th scope="col">번호</th>
-          <th scope="col">글쓴이</th>
-          <th scope="col">제목</th>
-          <th scope="col">작성일</th>
-          <th scope="col">수정일</th>
-          <th scope="col">수정/삭제</th>
+          <th scope="col">아이디</th>
+          <!-- <th scope="col">수정/삭제</th> -->
         </tr>
       </thead>
       <tbody>
@@ -67,26 +46,16 @@
         data.forEach((el,index) => {%>
         <tr>
           <th scope="row"><%= index + 1%></th>
-          <td><%= el.bbsWriter %></td>
-          <td><a href="/main/details/<%= el.bbsNo %>"><%= el.bbsTitle %></a></td>
-          <td>
-            <% 
-            var createDate = new Date(el.bbsCreateDate).toLocaleDateString().replace(/\./g, '').replace(/\s/g, '-');
-            %>
-            <%=createDate%>
-          </td>
-          <td>
-            <% 
-            var ModifyDate = new Date(el.bbsModifyDate).toLocaleDateString().replace(/\./g, '').replace(/\s/g, '-');
-            %>
-            <%=ModifyDate%>
-          </td>
-          <td>
+          <td><a href="/user/<%= el.idx %>"><%= el.username %></a></a></td>
+          
+          
+          <!-- <td>
             <button class="btn btn-warning" onclick="location.href ='/main/modify/<%= el.bbsNo %>'">수정</button>
           </td>
           <td>
             <button class="btn btn-warning" onclick="delBtn('<%= el.bbsNo %>')">삭제</button>
-          </td>
+          </td> -->
+
         </tr>
         <% }) %>
       </tbody>
@@ -112,4 +81,7 @@
       <a href="/main?page=<%=totalPage%>&pageSize=<%=pageSize%>">></a>
 
   </body>
+
+
+  <script type="text/javascript"></script>
 </html>

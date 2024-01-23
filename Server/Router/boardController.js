@@ -39,6 +39,9 @@ app.set('view engine', 'ejs');
 
 // 메인
 exports.mainView = async function(req, res, next) {
+
+    //세션 확인 
+
     const pageInfo = req.query;
     var pageNum = 1;
     var pageSize = 5;
@@ -69,13 +72,30 @@ exports.mainView = async function(req, res, next) {
             ],
             raw:true
         });
+        
+        var user = JSON.stringify(req.session.username)
 
-    return res.render('./main/main', {
+        console.log("req.session.username",req.session.username);
+
+        if(req.session){
+          return res.render('./main/main', {
+            username: req.session.username,
             data: bbsData,
             pageNum : pageNum,
             pageSize : pageSize,
             totalCnt : cnt[0].cnt
         });
+        }else{
+          return res.render('./main/main', {
+            username: null,
+            data: bbsData,
+            pageNum : pageNum,
+            pageSize : pageSize,
+            totalCnt : cnt[0].cnt
+        });
+        }
+
+    
 };
 
 
@@ -121,18 +141,19 @@ exports.preCreateAction = async function (req, res) {
 
 
 exports.createView = function (req, res) {
-      res.render("./create/test");
+      res.render("./create/test", {username: req.session.username});
 }
 
 exports.createAction = async function (req, res) {
   upload(req, res, (err) => {
-    console.log("path",path);
+
+    console.log("req.session.username",req.session.username);
 
         if(req.files.length != 0){
           var path = req.files[0].path.split('\\', 3);
-          console.log("path",path);
+          console.log("req.body.title",req.body.title);
           models.Bbs.create({
-                  bbsWriter : req.body.writer,
+                  bbsWriter : req.session.username,
                   bbsTitle : req.body.title,
                   bbsContent : req.body.content,
                   bbsCreateDate : sequelize.fn('NOW'),
@@ -162,7 +183,7 @@ exports.createAction = async function (req, res) {
             }).then(function(result){
               return res.redirect('/main/');
             }).catch(function(err){
-              console.log(err)
+              console.log(err);
           });
       }
   });
