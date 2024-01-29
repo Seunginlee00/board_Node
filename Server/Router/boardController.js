@@ -10,6 +10,8 @@ const storage = multer.diskStorage({
     destination: (req, file, callback) => {
       var today = new Date();
 
+      console.log("today",today);
+
       var dir = "public/uploads/" + today
       if (!fs.existsSync(dir)) {
         fs.mkdirSync(dir, { recursive: true });
