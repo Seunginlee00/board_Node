@@ -31,9 +31,9 @@ exports.idCheckAction = function(req, res, next) {
       }).then(result => {
         var data = 1;
         if(result != null){
-            data = 1;
+            data = "T"; // 중복
         }else{
-            data = 0;
+            data = "F"; // 미중복
         }
         return res.send(JSON.stringify(data));
       })
@@ -200,3 +200,51 @@ exports.logoutAction = async function(req, res, next) {
 }
 
 };
+
+//아이디 찾기
+exports.idFindView = function(req, res, next) {
+   res.render("./find/idFind");
+};
+
+exports.idFindAction = function(req, res, next) {
+    try{
+        var email = req.body.email;
+        console.log("email",email);
+        var phone = req.body.phone;
+
+        if(email != null && phone == null){
+            // 휴대폰 선택시
+
+            models.tb_join.findOne({
+                where: {phone: phone}
+            }).then(function(result){
+                console.log("reuslt :: ",result.tb_join.dataValues);
+
+
+                // return res.render('./user/userDetail',{data:result});
+            }).catch(function(err){
+                console.log(err);
+            });
+
+        }else{
+            //이메일 선택시 
+            models.tb_join.findOne({
+                where: {email: email}
+            }).then(function(result){
+                console.log("reuslt",result);
+                console.log("reuslt",result.username);
+
+                // return res.render('./user/userDetail',{data:result});
+            }).catch(function(err){
+                console.log(err);
+            });
+
+        }
+
+    }catch(err){
+        console.log(err);
+    }
+    res.render("./find/idFindPg");
+ };
+
+// 비밀번호 찾기

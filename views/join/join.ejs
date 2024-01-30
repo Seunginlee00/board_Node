@@ -188,7 +188,7 @@ function chkId(){
 		, dataType : "json"
 		, async : false
 		, success : function(data){
-			if(data > 0){
+			if(data == "T"){
 				idFlag = false;
 				var str = "중복된 아이디가 존재합니다.";
 		    	formSetting(str,"#spUserId",false);
@@ -242,7 +242,6 @@ $(document).on("keyup", "input:text[numOnly]", function() {$(this).val( $(this).
 
          if(password == "" || str_email01 == "" || str_email02.length == "" || 
          phone1.length == "" || phone2.length == "" || phone3.length == "" ){
-           console.log("안들어와?");
             alert("입력하지 않은 값이 있습니다.")
             return false;
          }else{

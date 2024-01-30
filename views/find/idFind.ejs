@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="ko"> 
+<head>
+<meta charset="UTF-8">
+<title>아이디 찾기</title> 
+<style>
+   .choice_box {
+    display: none;
+   }
+   .choice_box_on {
+    display: block;
+   }
+</style>
+</head>
+<body>
+   <div>
+      <form method ="post"
+      id="insertFrm"
+      action="/id-find">
+         <p>아이디 찾기</p>
+         <div>
+            <ul class="checkbox-radio-custom choice">
+            <li>
+               <input type="radio" name="verifyTypeP" id="verifyTypeP1" title="휴대폰">
+               <label for="verifyTypeP2">휴대폰</label>
+            </li>
+            <li>
+               <input type="radio" name="verifyTypeP" id="verifyTypeP2" title="이메일">
+               <label for="verifyTypeP3">이메일</label>
+            </li>
+         </ul>
+         </div>
+         
+         <div>
+            <!--휴대폰 라디오버튼 check 시-->
+               <div class="choice_box">
+                  <ul class="find-write-form-wrap">
+                     <li>
+                        <span class="find-tit"><label for="phone2">휴대폰번호</label></span>
+                        <div class="input-wrap-three">
+                            <select class="info-select" id="phone1" name="phone1" title="휴대폰번호 앞자리 선택">
+                                 <option value="" selected="">선택</option>
+                                 <option value="010">010</option>
+                                 <option value="011">011</option>
+                                 <option value="016">016</option>
+                                 <option value="017">017</option>
+                                 <option value="018">018</option>
+                                 <option value="019">019</option>
+                              </select>
+                          
+                           <span>-</span>
+                              <input type="text" id="phone2" name="phone1" title="휴대폰번호 중간자리" "="" maxlength="4" numberonly="true" value="" >
+                      
+                           <span>-</span>
+                              <input type="text" id="phone3" name="phone3" title="휴대폰번호 뒷자리" maxlength="4" numberonly="true" value="" >
+                              <input type="hidden" id="phone" name="phone">
+                        </div>
+                     </li>
+                  </ul>
+               </div>
+               <!-- END  -->
+
+               <!--이메일 라디오버튼 check 시-->
+               <div class="choice_box">
+                  <ul class="find-write-form-wrap">
+                     <li>
+                        이메일 : <input type="text" name="str_email01" id="str_email01" style="width:100px"> @
+                        <input type="text" name="str_email02" id="str_email02" style="width:100px;" disabled value="naver.com">
+                        <input type="hidden" name="str_email03" id="str_email03">
+                        <select style="width:100px;margin-right:10px" name="selectEmail" id="selectEmail">
+                             <option value="1">직접입력</option>
+                             <option value="naver.com" selected>naver.com</option>
+                             <option value="hanmail.net">hanmail.net</option>
+                             <option value="nate.com">nate.com</option>
+                             <option value="yahoo.co.kr">yahoo.co.kr</option>
+                             <option value="gmail.com">gmail.com</option>
+                        </select>
+                        <input type="hidden" name="email" id="email">
+                     </li>
+                  </ul>
+         </div>
+
+         <p><input type="button" onclick="idFind()" value="아이디 찾기"></p>
+         <a href="/join">회원가입하기</a> | <a href="/">로그인하기</a>
+
+      </form>
+   </div>
+
+   <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+   <script>
+
+      // 라디오 선택 
+      var verifyTypeP1 = document.getElementById("verifyTypeP1");
+      var choice_box_List = document.getElementsByClassName("choice_box");
+      var email = null;
+      var phone = null;
+      $(document).ready(function(){
+         $("#verifyTypeP1").click(function(){
+            $( choice_box_List[1] ).removeClass( 'choice_box_on' );
+            $( choice_box_List[0] ).addClass( 'choice_box_on' );
+         });
+         $("#verifyTypeP2").click(function(){
+            $( choice_box_List[0] ).removeClass( 'choice_box_on' );
+            $( choice_box_List[1] ).addClass( 'choice_box_on' );
+         });
+   });
+
+       //이메일 입력방식 선택
+       $('#selectEmail').change(function(){
+         $("#selectEmail option:selected").each(function () {
+              var str_email02 = document.getElementById("str_email02");
+            
+              if($(this).val()== '1'){ //직접입력일 경우
+                   $("#str_email02").val('');                        //값 초기화
+                   $("#str_email02").attr("disabled",false); //활성화
+              }else{ //직접입력이 아닐경우          
+                   $('#str_email02').attr('value', $(this).text());    //선택값 입력
+                   $("#str_email02").attr("disabled",true); //비활성화
+              }
+         });
+      });
+
+
+      function idFind(){
+
+      var str_email01 = $("#str_email01").val();
+      var str_email02 = $("#str_email02").val();
+      
+       
+      // 휴대폰
+      var phone1 = $("#phone1").val();
+      var phone2 = $("#phone2").val();
+      var phone3 = $("#phone3").val();
+      var insertFrm = document.getElementById("insertFrm"); // form 데이터 
+
+
+      if(str_email01 != null && str_email02 ){
+         email = str_email01 + "@" + str_email02;
+         $("#email").val(email);
+         phone = null;
+
+         insertFrm.submit();
+
+      }else{
+         if(phone1 != null && phone2 != null  && phone3 != null){
+            phone = phone1 + "-" + phone2 + "-" + phone3;
+            $("#phone").val(phone);
+            email = null;
+            insertFrm.submit();
+          }else{
+            alert("아직 입력하지 않은 값이 있습니다.");
+            return false;
+          }
+      }
+
+
+      
+
+
+   }
+      
+
+
+
+   </script>
+
+
+
+</body>
+
+
+</html>

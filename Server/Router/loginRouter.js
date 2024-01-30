@@ -18,8 +18,12 @@ router.get('/logout',controller.logoutAction);
 
 //회원 리스트
 router.get('/user',controller.userMainView);
-
 router.get('/user/:idx',controller.userDetailView);
 router.get('/user/:idx',controller.userDetailAction);
+
+// 아이디 찾기
+router.get("/id-find",controller.idFindView)
+router.post("/id-find",controller.idFindAction)
+// 비밀번호 찾기
 
 module.exports = router;
