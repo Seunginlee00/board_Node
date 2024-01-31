@@ -102,7 +102,7 @@ exports.loginAction = async function(req, res, next) {
 exports.userMainView = async function(req, res, next) {
     try {
 
-        const pageInfo = req.query;
+    const pageInfo = req.query;
     var pageNum = 1;
     var pageSize = 5;
     console.log("pageInfo",pageInfo);
@@ -206,45 +206,61 @@ exports.idFindView = function(req, res, next) {
    res.render("./find/idFind");
 };
 
-exports.idFindAction = function(req, res, next) {
-    try{
+exports.idFindAction = async function(req, res) {
+  
         var email = req.body.email;
         console.log("email",email);
         var phone = req.body.phone;
 
-        if(email != null && phone == null){
+        if(email == null && phone != null){
             // 휴대폰 선택시
-
             models.tb_join.findOne({
                 where: {phone: phone}
             }).then(function(result){
-                console.log("reuslt :: ",result.tb_join.dataValues);
 
+                if(result != null){
+                    console.log("들어옴",result.username);
+                    return res.render('./find/idFindPg',{
+                        data:result.username,
+                    });
+                }else{
+                    return res.render('./find/idFindPg',{
+                        data:"null",
+                    });
+                }
 
-                // return res.render('./user/userDetail',{data:result});
             }).catch(function(err){
                 console.log(err);
             });
 
         }else{
+
+
             //이메일 선택시 
             models.tb_join.findOne({
                 where: {email: email}
             }).then(function(result){
-                console.log("reuslt",result);
-                console.log("reuslt",result.username);
-
-                // return res.render('./user/userDetail',{data:result});
+                if(result != null){
+                    console.log("들어옴",result.username);
+                    return res.render('./find/idFindPg',{
+                        data:result.username,
+                    });
+                }else{
+                    return res.render('./find/idFindPg',{
+                        data:"null",
+                    });
+                }
             }).catch(function(err){
                 console.log(err);
             });
 
-        }
+         }
 
-    }catch(err){
-        console.log(err);
-    }
-    res.render("./find/idFindPg");
+        // return res.render('./find/idFindPg',{
+        //     data:"null",
+        // });
+
+        
  };
 
 // 비밀번호 찾기

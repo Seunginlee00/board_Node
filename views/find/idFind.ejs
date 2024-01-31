@@ -138,7 +138,7 @@
          email = str_email01 + "@" + str_email02;
          $("#email").val(email);
          phone = null;
-
+         $("#phone").val(phone);
          insertFrm.submit();
 
       }else{
@@ -146,6 +146,7 @@
             phone = phone1 + "-" + phone2 + "-" + phone3;
             $("#phone").val(phone);
             email = null;
+            $("#email").val(email);
             insertFrm.submit();
           }else{
             alert("아직 입력하지 않은 값이 있습니다.");
