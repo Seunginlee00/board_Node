@@ -211,7 +211,7 @@ exports.idFindAction = async function(req, res) {
         var email = req.body.email;
         console.log("email",email);
         var phone = req.body.phone;
-
+        console.log("phone",phone);
         if(email == null && phone != null){
             // 휴대폰 선택시
             models.tb_join.findOne({

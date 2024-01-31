@@ -53,7 +53,8 @@
                       
                            <span>-</span>
                               <input type="text" id="phone3" name="phone3" title="휴대폰번호 뒷자리" maxlength="4" numberonly="true" value="" >
-                              <input type="hidden" id="phone" name="phone">
+                             
+                              <input type="hidden" id="phoneNum" name="phoneNum">
                         </div>
                      </li>
                   </ul>
@@ -134,17 +135,20 @@
       var insertFrm = document.getElementById("insertFrm"); // form 데이터 
 
 
-      if(str_email01 != null && str_email02 ){
+      if(str_email01 != null){
          email = str_email01 + "@" + str_email02;
          $("#email").val(email);
          phone = null;
-         $("#phone").val(phone);
+         $("#phoneNum").val(phone);
          insertFrm.submit();
 
       }else{
+         console.log("phone1",phone1);
+         console.log("phone1",phone2);
+         console.log("phone1",phone3);
          if(phone1 != null && phone2 != null  && phone3 != null){
             phone = phone1 + "-" + phone2 + "-" + phone3;
-            $("#phone").val(phone);
+            $("#phoneNum").val(phone);
             email = null;
             $("#email").val(email);
             insertFrm.submit();
