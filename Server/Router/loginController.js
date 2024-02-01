@@ -13,6 +13,9 @@ const bcrypt = require("bcrypt");
 //세션 
 const session = require("express-session");
 
+// node 메일..
+const nodemailer = require("nodemailer");
+
 
 
 exports.mainView = function(req, res, next) {
@@ -210,12 +213,12 @@ exports.idFindAction = async function(req, res) {
   
         var email = req.body.email;
         console.log("email",email);
-        var phone = req.body.phone;
-        console.log("phone",phone);
-        if(email == null && phone != null){
+        var phoneNum = req.body.phoneNum;
+        console.log("phoneNum",phoneNum);
+        if(email == "" && phoneNum != null){
             // 휴대폰 선택시
             models.tb_join.findOne({
-                where: {phone: phone}
+                where: {phone: phoneNum}
             }).then(function(result){
 
                 if(result != null){
@@ -264,3 +267,151 @@ exports.idFindAction = async function(req, res) {
  };
 
 // 비밀번호 찾기
+
+
+  // 랜덤 생성
+  function generateRandomPassword() {
+    return Math.floor(Math.random() * 10 ** 8)
+      .toString()
+      .padStart("0", 8);
+  }
+
+  exports.pwFindView = async function(req, res) {
+    res.render('./find/pwFind');
+  }
+
+  
+  exports.pwFindAction = async function(req, res) {
+
+    const randomPassword = generateRandomPassword();
+    let phoneNum = req.body.phoneNum;
+    let email = req.body.email;
+
+    // 계정 정보
+    let transporter = nodemailer.createTransport({
+        service: 'gmail',	//gmail service 사용
+        port: 465,	//465 port를 통해 요청 전송
+        secure: true,
+        auth: {
+            user: "seunginlee0713@gmail.com",
+            pass: "hxby smcb xgxt dcya",
+        },
+        });
+
+        let mailOptions = {
+        from: "seunginlee0713@gmail.com", //보내는 사람 메일주소
+        to: "", //받는 사람 메일주소
+        subject: 'Password 찾기',
+        html: "", // 메일내용
+        };
+
+
+    if(phoneNum != ""){
+        //휴대폰 번호로 찾기 
+        var num = models.tb_join.findOne({where: { phone: phoneNum },
+        })
+        .then(function(data){
+
+            if(data != ""){
+                // 입력한 번호로 가입된 계정이 있는 경우 
+
+                // 1. 메일 전송
+
+                mailOptions.to = data.email; // 이메일 변경 
+                mailOptions.html = `<p>${data.email} 계정의 임시 비밀번호는 <strong>${randomPassword}<strong>입니다.</p>`
+                  transporter.sendMail(mailOptions, function (error, info) {
+                    if (error) {
+                      console.log(error);
+                        return next(error);
+                    } else {
+                      console.log('Email sent: ' + info.response);
+                      return res.status(200).json({ success: true });
+                    }
+                  });
+
+
+                // 2. 번호 비교를 위한 번호 리턴! 
+
+                return res.render('./find/pwFindPg',{randomPassword : randomPassword,
+                                                    username : data.username});
+
+            }else{
+                // 입력한 번호로 가입된 계정이 없는 경우 
+                return res.status(200).json({ '넌 번호 틀림' : false });
+            }
+
+        })
+        .catch(function(err){
+            console.log(err);
+        });
+
+    }else{
+
+        // 메일로 찾기 
+
+    // models.tb_join.findOne({where: { email: email },})
+    // .then(function(result){
+
+    //     if(!result){
+    //         //데이터 없음!!!!! 비번 찾기 실패!!!!! 
+    //     }else{
+
+
+    //           // 메일 전송 부분 
+    //           transporter.sendMail(mailOptions, function (error, info) {
+    //             if (error) {
+    //               console.log(error);
+    //               next(error);
+    //             } else {
+    //               console.log('Email sent: ' + info.response);
+    //               return res.status(200).json({ success: true });
+    //             }
+    //           });
+
+
+    //     }
+
+    // })
+    // .catch(function(err){
+    //     console.log(err);
+    // });
+
+    }
+
+    
+  };
+
+// 비밀번호 변경 
+
+  exports.pwNewView = async function(req, res) {
+    res.render('./find/pwNewChange', {username:req.body.username});
+  }
+
+  exports.pwNewAction = async function(req, res) {
+    const salt = bcrypt.genSaltSync(10);
+    const hash = bcrypt.hashSync(req.body.password, salt);
+
+    console.log("비밀번호 변경", req.body.username);
+    console.log("비밀번호 변경", req.body.password); 
+    models.tb_join.update({
+        password:hash,
+    },
+        {where : {username : req.body.username}})
+    .then(function(data){
+
+        return res.render('./main/index');
+
+    })
+    .catch({
+
+    });
+
+  };
+
+  // 남은거 
+  // 이메일 적용  
+  // 시간초 제한 
+
+            // 이메일/휴대폰 번호 제한
+  // 김꼬미 귀엽다
+  //

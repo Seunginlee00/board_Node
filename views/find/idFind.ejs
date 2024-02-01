@@ -134,8 +134,8 @@
       var phone3 = $("#phone3").val();
       var insertFrm = document.getElementById("insertFrm"); // form 데이터 
 
-
-      if(str_email01 != null){
+       
+      if(str_email01 != ""){
          email = str_email01 + "@" + str_email02;
          $("#email").val(email);
          phone = null;
@@ -143,10 +143,7 @@
          insertFrm.submit();
 
       }else{
-         console.log("phone1",phone1);
-         console.log("phone1",phone2);
-         console.log("phone1",phone3);
-         if(phone1 != null && phone2 != null  && phone3 != null){
+         if(phone1 != "" && phone2 != ""  && phone3 != ""){
             phone = phone1 + "-" + phone2 + "-" + phone3;
             $("#phoneNum").val(phone);
             email = null;

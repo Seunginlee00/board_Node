@@ -2,34 +2,42 @@
 <html lang="ko"> 
 <head>
 <meta charset="UTF-8">
-<title>아이디 찾기</title> 
+<title>비밀번호 찾기</title> 
 </head>
 <body>
    <div>
       <form method ="post"
       id="insertFrm"
-      action="/id-find">
-         <p>아이디 찾기</p>
+      action="/pw-check">
+         <p>비밀번호 찾기</p>
          <div>
-            <%
-               if(data != null){
-                  %>
-                  <p> 아이디는 <%=data%> 입니다. </p>
-                  <%
-               }else{
-                  %>
-                  <p> 찾는 아이디가 없습니다. </p>
-                  <%
-               }
-            %>
+           <input type="text" name="checkNum" id="checkNum" placeholder="유효번호 입력" value=""/> 
+           <input type="hidden" id="username" name="username" value="<%=username%>"/>
+           <input type="button" onclick="check()" value="확인"/>
          </div>
-         
-         <a href="/join">회원가입하기</a> | <a href="/">로그인하기</a>
-
       </form>
    </div>
 
    <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+   <script>
+       var insertFrm = document.getElementById("insertFrm"); // form 데이터 
+       var randomNum = "<%=randomPassword%>";
+       var username = "<%=username%>";
+       console.log("username",username);
+       
+       console.log("randomNum",randomNum);
+      function check(){
+         var checkNum = document.getElementById("checkNum").value;        
+      if(checkNum != ""){
+         if(checkNum == randomNum){
+            insertFrm.submit();
+         }else{
+            alert("유효번호가 틀렸습니다.");
+         }
+         }
+      }
+
+   </script>
 
 </body>
 

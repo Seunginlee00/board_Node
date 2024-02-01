@@ -1,0 +1,56 @@
+
+<!DOCTYPE html>
+<html lang="ko"> 
+<head>
+<meta charset="UTF-8">
+<title>비밀번호 변경</title> 
+
+</head>
+<body>
+
+    <div>
+        <form method ="post"
+        id="insertFrm"
+        action="/pw-change">
+           <p>패스워드 변경</p>
+            <input type="password"  id="password" name="password" placeholder="변경할 패스워드">
+            <input type="password"  id="passCheck"  name="passCheck" placeholder="변경할 패스워드">
+            <input type="hidden" id="username" name="username" value="<%=username%>"/>
+            <p><input type="button" onclick="pwFind()" value="비밀번호 찾기"></p>
+  
+        </form>
+     </div>
+  
+
+
+     <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+
+    <script type="text/javascript">
+      function pwFind(){
+         var pass = document.getElementById("password").value;
+         var passCheck = document.getElementById("passCheck").value;
+         var insertFrm = document.getElementById("insertFrm"); // form 데이터
+         if(pass != "" && passCheck != ""){
+            if(pass == passCheck){
+               insertFrm.submit();
+            }else{
+               alert("패스워드가 다릅니다.");
+            }
+         }else{
+            alert("비어있는 값이 있습니다.");
+         }
+
+      }
+     
+
+         console.log(" pass == passCheck", pass == passCheck);
+
+      // if(p)
+
+
+    </script>
+
+    </body>
+
+
+</html>
