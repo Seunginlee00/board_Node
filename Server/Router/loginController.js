@@ -277,7 +277,7 @@ exports.idFindAction = async function(req, res) {
   }
 
   exports.pwFindView = async function(req, res) {
-    res.render('./find/pwFind');
+    res.render('./find/pwFind', {error:"기본값"});
   }
 
   
@@ -349,32 +349,48 @@ exports.idFindAction = async function(req, res) {
 
         // 메일로 찾기 
 
-    // models.tb_join.findOne({where: { email: email },})
-    // .then(function(result){
+console.log("email",email);
 
-    //     if(!result){
-    //         //데이터 없음!!!!! 비번 찾기 실패!!!!! 
-    //     }else{
+var num = models.tb_join.findOne({where: { email: email },
+})
+.then(function(data){
+
+    console.log("data" , data);
+
+            if(data == null){
+                 // 입력한 번호로 가입된 계정이 없는 경우 
+                return res.render('./find/pwFind', {error: '가입된 내역이 없습니다.'});
+                
+
+            }else{
+               
+              // 입력한 번호로 가입된 계정이 있는 경우 
+
+                // 1. 메일 전송
+
+                mailOptions.to = data.email; // 이메일 변경 
+                mailOptions.html = `<p>${data.email} 계정의 임시 비밀번호는 <strong>${randomPassword}<strong>입니다.</p>`
+                transporter.sendMail(mailOptions, function (error, info) {
+                    if (error) {
+                    console.log(error);
+                        return next(error);
+                    } else {
+                    console.log('Email sent: ' + info.response);
+                    return res.status(200).json({ success: true });
+                    }
+                });
 
 
-    //           // 메일 전송 부분 
-    //           transporter.sendMail(mailOptions, function (error, info) {
-    //             if (error) {
-    //               console.log(error);
-    //               next(error);
-    //             } else {
-    //               console.log('Email sent: ' + info.response);
-    //               return res.status(200).json({ success: true });
-    //             }
-    //           });
+                // 2. 번호 비교를 위한 번호 리턴! 
 
+                return res.render('./find/pwFindPg',{randomPassword : randomPassword,
+                                                    username : data.username});
+            }
 
-    //     }
-
-    // })
-    // .catch(function(err){
-    //     console.log(err);
-    // });
+        })
+        .catch(function(err){
+            console.log(err);
+        });
 
     }
 
@@ -414,4 +430,8 @@ exports.idFindAction = async function(req, res) {
 
             // 이메일/휴대폰 번호 제한
   // 김꼬미 귀엽다
-  //
+  
+  
+  // 로직좀 생각 해보자 
+  // 일단 시간초 10분이고 그거 끝나면 > 번호 다시 보내기를 하고 싶어 
+  // 일단 그럴려면 

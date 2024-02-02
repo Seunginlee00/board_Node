@@ -10,10 +10,17 @@
       id="insertFrm"
       action="/pw-check">
          <p>비밀번호 찾기</p>
-         <div>
-           <input type="text" name="checkNum" id="checkNum" placeholder="유효번호 입력" value=""/> 
+         <div  class="wrapper__middle">
+               <div class="wrapper__bottom">
+                  <input type="text" name="checkNum" id="checkNum" placeholder="인증번호 입력" value=""/> 
+                  <span class="target__time">
+                    <span id="remaining__min">10</span> :
+                    <span id="remaining__sec">00</span>
+                  </span>
+                  <input type="button" class="complete__target" id="complete" onclick="check()" value="인증완료">
+               </div>
            <input type="hidden" id="username" name="username" value="<%=username%>"/>
-           <input type="button" onclick="check()" value="확인"/>
+           <input type="button" onclick="chkSub()" value="확인"/>
          </div>
       </form>
    </div>
@@ -26,16 +33,58 @@
        console.log("username",username);
        
        console.log("randomNum",randomNum);
+
+
+
+       const remainingMin = document.getElementById("remaining__min");
+      const remainingSec = document.getElementById("remaining__sec");
+      const completeBtn = document.getElementById("complete");
+
+// 굳이 ms로 변경할 필요가 없다. 계산하기 더 불편하고 할 이유가 없다.
+// 항상 상황에 따라서 달라진다.
+var pushBtn = false;
+
+let time = 600;
+window.onload = takeTarget = () => {
+  setInterval(function () {
+    if (time > 0) { // >= 0 으로하면 -1까지 출력된다.
+      time = time - 1; // 여기서 빼줘야 3분에서 3분 또 출력되지 않고, 바로 2분 59초로 넘어간다.
+      let min = Math.floor(time / 60);
+      let sec = String(time % 60).padStart(2, "0");
+      remainingMin.innerText = min;
+      remainingSec.innerText = sec;
+      // time = time - 1
+    } else {
+      completeBtn.disabled = true;
+    }
+  }, 1000);
+};
+
+
+
       function check(){
          var checkNum = document.getElementById("checkNum").value;        
       if(checkNum != ""){
          if(checkNum == randomNum){
-            insertFrm.submit();
+            pushBtn = true;
          }else{
-            alert("유효번호가 틀렸습니다.");
+            alert("인증번호가 틀렸습니다.");
          }
          }
       }
+
+
+
+      function chkSub(){
+         var checkNum = document.getElementById("checkNum").value;        
+      if(pushBtn){
+            insertFrm.submit();
+         }else{
+            alert("인증번호를 입력해주세요.");
+         }
+      }
+
+
 
    </script>
 

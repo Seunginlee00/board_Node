@@ -94,6 +94,16 @@
      <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
 
     <script type="text/javascript">
+         var error = '<%=error%>';
+         if(error != "기본값"){
+            alert('<%=error%>')
+            history.back();
+         }
+
+
+
+
+
          // 라디오 선택 
       var verifyTypeP1 = document.getElementById("verifyTypeP1");
       var choice_box_List = document.getElementsByClassName("choice_box");
